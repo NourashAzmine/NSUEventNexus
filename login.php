@@ -39,11 +39,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 header("Location: organizerDashboard.php"); // Redirect to Organizer Dashboard
                 exit();
             }
+            $attendeeCheck = $conn->query("SELECT attendeeID FROM attendees WHERE attendeeID = $userID");
+            if ($attendeeCheck->num_rows > 0) {
+                $_SESSION['attendeeID'] = $userID; // Set session variable
+                header("Location: index.php"); // Redirect to Index Page
+                exit();
+            }
 
             // If the user is neither admin nor organizer, redirect to user dashboard
             $_SESSION['userID'] = $userID; // Set session variable
             header("Location: userDashboard.php"); // Redirect to User Dashboard
-            exit();
+            // If the user is not found in any table, show an error
+            $error = "User role not recognized!";
         } else {
             $error = "Invalid password!";
         }
@@ -55,23 +62,51 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $conn->close();
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <link rel="stylesheet" href="CSS/loginCSS.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <h2>Login</h2>
-    <?php if (isset($error)): ?>
-        <p style="color: red;"><?php echo $error; ?></p>
-    <?php endif; ?>
-    <form method="post">
-        <input type="email" name="email" placeholder="Email" required><br>
-        <input type="password" name="password" placeholder="Password" required><br>
-        <button type="submit">Login</button>
-    </form>
+    <div class="login-container">
+        <h2>Login</h2>
+        <?php if (isset($error)): ?>
+            <p class="error"><?php echo $error; ?></p>
+        <?php endif; ?>
+        <form method="post">
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" name="email" placeholder="Email" required>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" name="password" placeholder="Password" required>
+                <button type="button" class="eye-icon" id="togglePassword">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </div>
+            <button type="submit" class="btn">Login</button>
+        </form>
+        <a href="login.php" class="forgot-password">Forgot Password?</a>
+        <a href="index.php" class="back-to-home">Back to Home</a>
+    </div>
+
+    <script>
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('input[name="password"]');
+
+        togglePassword.addEventListener('click', function (e) {
+            // Toggle the type attribute
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            // Toggle the eye icon
+            this.querySelector('i').classList.toggle('fa-eye');
+            this.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+    </script>
 </body>
 </html>

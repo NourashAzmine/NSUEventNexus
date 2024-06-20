@@ -8,18 +8,35 @@ if (!isset($_SESSION['organizerID'])) {
     exit();
 }
 
-$organizer_id = $_SESSION['organizerID'];
+$organizerID = $_SESSION['organizerID'];
 
-// Fetch volunteers
+// Fetch volunteers assigned to the organizer
 $volunteers = [];
-$stmt = $conn->prepare("SELECT v.role, u.username, e.eventName FROM volunteers v JOIN users u ON v.userID = u.userID JOIN events e ON v.eventID = e.eventID WHERE e.organizerID = ? ORDER BY e.date ASC");
-$stmt->bind_param("i", $organizer_id);
+$stmt = $conn->prepare("SELECT v.volunteerID, u.username, v.assignedTasks 
+                        FROM volunteers v 
+                        JOIN users u ON v.volunteerID = u.userID
+                        WHERE v.organizerID = ?");
+$stmt->bind_param("i", $organizerID);
 $stmt->execute();
 $result = $stmt->get_result();
 while ($row = $result->fetch_assoc()) {
     $volunteers[] = $row;
 }
 $stmt->close();
+
+// Handle form submission to assign tasks
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $volunteerID = $_POST['volunteerID'];
+    $assignedTasks = $_POST['assignedTasks'];
+
+    $stmt = $conn->prepare("UPDATE volunteers SET assignedTasks = ? WHERE volunteerID = ? AND organizerID = ?");
+    $stmt->bind_param("sii", $assignedTasks, $volunteerID, $organizerID);
+    $stmt->execute();
+    $stmt->close();
+
+    header('Location: volunteer_management.php');
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -27,28 +44,72 @@ $stmt->close();
 <head>
     <meta charset="UTF-8">
     <title>Volunteer Management</title>
+    <link rel="stylesheet" href="CSS/volunteerManagementCSS.css"> <!-- Assuming a CSS file to style the dashboard -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <header>
-        <h1>Volunteer Management</h1>
-        <a href="organizerDashboard.php">Back to Dashboard</a>
-    </header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <a href="organizerDashboard.php" class="navbar-brand">
+                    <i class="fas fa-calendar-alt"></i> NSU Event Nexus
+                </a>
+            </div>
+            <ul class="navbar-menu">
+                <li><a href="organizerDashboard.php"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="upcoming_events.php"><i class="fas fa-calendar-check"></i> Upcoming Events</a></li>
+                <li><a href="create_event.php"><i class="fas fa-plus-circle"></i> Create Event</a></li>
+                <li><a href="manage_events.php"><i class="fas fa-edit"></i> Manage Events</a></li>
+                <li><a href="notifications.php"><i class="fas fa-bell"></i> Notifications</a></li>
+                <li><a href="volunteer_management.php"><i class="fas fa-users"></i> Volunteer Management</a></li>
+                <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+    </nav>
 
-    <main>
-        <table border="1">
-            <tr>
-                <th>Event Name</th>
-                <th>Username</th>
-                <th>Role</th>
-            </tr>
-            <?php foreach ($volunteers as $volunteer): ?>
-            <tr>
-                <td><?php echo htmlspecialchars($volunteer['eventName']); ?></td>
-                <td><?php echo htmlspecialchars($volunteer['username']); ?></td>
-                <td><?php echo htmlspecialchars($volunteer['role']); ?></td>
-            </tr>
-            <?php endforeach; ?>
-        </table>
-    </main>
+    <div class="mcontainer">
+        <header>
+            <h1>Volunteer Management</h1>
+        </header>
+        
+        <main>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Volunteer Name</th>
+                        <th>Assigned Tasks</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (count($volunteers) > 0): ?>
+                        <?php foreach ($volunteers as $volunteer): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($volunteer['username']); ?></td>
+                                <td><?php echo htmlspecialchars($volunteer['assignedTasks']); ?></td>
+                                <td>
+                                    <form method="post" action="volunteer_management.php">
+                                        <input type="hidden" name="volunteerID" value="<?php echo $volunteer['volunteerID']; ?>">
+                                        <textarea name="assignedTasks"><?php echo htmlspecialchars($volunteer['assignedTasks']); ?></textarea>
+                                        <button type="submit">Update</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="3">No volunteers found to assign tasks.</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 NSU Event Nexus. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 </html>

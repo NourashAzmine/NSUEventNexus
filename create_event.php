@@ -10,6 +10,14 @@ if (!isset($_SESSION['organizerID'])) {
 
 $organizer_id = $_SESSION['organizerID'];
 
+// Fetch organizer details
+$stmt = $conn->prepare("SELECT u.username, o.organizationName FROM users u JOIN organizers o ON u.userID = o.organizerID WHERE o.organizerID = ?");
+$stmt->bind_param("i", $organizer_id);
+$stmt->execute();
+$stmt->bind_result($username, $organizationName);
+$stmt->fetch();
+$stmt->close();
+
 function uploadBanner() {
     $target_dir = "images/uploads/eventBanners/";
     
@@ -91,13 +99,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt_seminar->close();
         } elseif ($eventType == 'general') {
             $type = $_POST['type'];
-            $organizer = $_POST['organizer'];
             $expectedAttendance = $_POST['expectedAttendance'];
             $theme = $_POST['theme'];
             $hasMultipleSessions = isset($_POST['hasMultipleSessions']) ? 1 : 0;
             $equipmentNeeded = $_POST['equipmentNeeded'];
             $stmt_general = $conn->prepare("INSERT INTO generalevents (eventID, type, organizer, expectedAttendance, theme, hasMultipleSessions, equipmentNeeded) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            $stmt_general->bind_param("issisis", $eventID, $type, $organizer, $expectedAttendance, $theme, $hasMultipleSessions, $equipmentNeeded);
+            $stmt_general->bind_param("issisis", $eventID, $type, $organizationName, $expectedAttendance, $theme, $hasMultipleSessions, $equipmentNeeded);
             $stmt_general->execute();
             $stmt_general->close();
         }
@@ -115,82 +122,111 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <title>Create Event</title>
+    <link rel="stylesheet" href="CSS/createEventCSS.css"> <!-- Assuming a CSS file to style the page -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <header>
-        <h1>Create New Event</h1>
-        <a href="organizerDashboard.php">Back to Dashboard</a>
-    </header>
-
-    <main>
-        <form action="create_event.php" method="post" enctype="multipart/form-data">
-            <label for="eventName">Event Name:</label>
-            <input type="text" id="eventName" name="eventName" required><br>
-
-            <label for="eventDetails">Event Details:</label>
-            <textarea id="eventDetails" name="eventDetails" required></textarea><br>
-
-            <label for="date">Date:</label>
-            <input type="date" id="date" name="date" required><br>
-
-            <label for="time">Time:</label>
-            <input type="time" id="time" name="time" required><br>
-
-            <label for="duration">Duration (hours):</label>
-            <input type="number" step="0.1" id="duration" name="duration" required><br>
-
-            <label for="location">Location:</label>
-            <input type="text" id="location" name="location" required><br>
-
-            <label for="registrationDeadline">Registration Deadline:</label>
-            <input type="date" id="registrationDeadline" name="registrationDeadline" required><br>
-
-            <label for="fee">Fee:</label>
-            <input type="number" step="0.01" id="fee" name="fee" required><br>
-
-            <label for="sponsor">Sponsor:</label>
-            <input type="text" id="sponsor" name="sponsor"><br>
-
-            <label for="banner">Banner Image:</label>
-            <input type="file" id="banner" name="banner"><br>
-
-            <label for="eventType">Event Type:</label>
-            <select id="eventType" name="eventType" required>
-                <option value="general">General Event</option>
-                <option value="seminar">Seminar</option>
-            </select><br>
-
-            <div id="generalFields" style="display: none;">
-                <label for="type">Type:</label>
-                <input type="text" id="type" name="type"><br>
-
-                <label for="organizer">Organizer:</label>
-                <input type="text" id="organizer" name="organizer"><br>
-
-                <label for="expectedAttendance">Expected Attendance:</label>
-                <input type="number" id="expectedAttendance" name="expectedAttendance"><br>
-
-                <label for="theme">Theme:</label>
-                <input type="text" id="theme" name="theme"><br>
-
-                <label for="hasMultipleSessions">Has Multiple Sessions:</label>
-                <input type="checkbox" id="hasMultipleSessions" name="hasMultipleSessions"><br>
-
-                <label for="equipmentNeeded">Equipment Needed:</label>
-                <textarea id="equipmentNeeded" name="equipmentNeeded"></textarea><br>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <a href="organizerDashboard.php" class="navbar-brand">
+                    <i class="fas fa-calendar-alt"></i> NSU Event Nexus
+                </a>
             </div>
+            <ul class="navbar-menu">
+                <li><a href="organizerDashboard.php"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="upcoming_events.php"><i class="fas fa-calendar-check"></i> Upcoming Events</a></li>
+                <li><a href="create_event.php"><i class="fas fa-plus-circle"></i> Create Event</a></li>
+                <li><a href="manage_events.php"><i class="fas fa-edit"></i> Manage Events</a></li>
+                <li><a href="notifications.php"><i class="fas fa-bell"></i> Notifications</a></li>
+                <!-- <li><a href="feedback.php"><i class="fas fa-comments"></i> Feedback</a></li> -->
+                <li><a href="volunteer_management.php"><i class="fas fa-users"></i> Volunteer Management</a></li>
+                <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+    </nav>
 
-            <div id="seminarFields" style="display: none;">
-                <label for="topic">Topic:</label>
-                <input type="text" id="topic" name="topic"><br>
+    <div class="container">
+        <header>
+            <h2>Create New Event</h2>
+        </header>
 
-                <label for="speakers">Speakers:</label>
-                <textarea id="speakers" name="speakers"></textarea><br>
-            </div>
+        <main>
+            <form action="create_event.php" method="post" enctype="multipart/form-data" class="event-form">
+                <div class="form-left">
+                    <label for="eventName">Event Name:</label>
+                    <input type="text" id="eventName" name="eventName" required><br>
 
-            <button type="submit">Create Event</button>
-        </form>
-    </main>
+                    <label for="eventDetails">Event Details:</label>
+                    <textarea id="eventDetails" name="eventDetails" required></textarea><br>
+
+                    <label for="date">Date:</label>
+                    <input type="date" id="date" name="date" required><br>
+
+                    <label for="time">Time:</label>
+                    <input type="time" id="time" name="time" required><br>
+
+                    <label for="duration">Duration (hours):</label>
+                    <input type="number" step="0.1" id="duration" name="duration" required><br>
+                </div>
+                <div class="form-middle">
+                    <label for="location">Location:</label>
+                    <input type="text" id="location" name="location" required><br>
+
+                    <label for="registrationDeadline">Registration Deadline:</label>
+                    <input type="date" id="registrationDeadline" name="registrationDeadline" required><br>
+
+                    <label for="fee">Fee:</label>
+                    <input type="number" step="0.01" id="fee" name="fee" required><br>
+
+                    <label for="sponsor">Sponsor:</label>
+                    <input type="text" id="sponsor" name="sponsor"><br>
+
+                    <label for="banner">Banner Image:</label>
+                    <input type="file" id="banner" name="banner"><br>
+
+                    <label for="eventType">Event Type:</label>
+                    <select id="eventType" name="eventType" required>
+                        <option value="seminar" selected>Seminar</option>
+                        <option value="general">General Event</option>
+                    </select><br>
+                </div>
+                <div class="form-right">
+                    <div id="generalFields" style="display: none;">
+                        <label for="type">Type:</label>
+                        <input type="text" id="type" name="type"><br>
+
+                        <label for="expectedAttendance">Expected Attendance:</label>
+                        <input type="number" id="expectedAttendance" name="expectedAttendance"><br>
+
+                        <label for="theme">Theme:</label>
+                        <input type="text" id="theme" name="theme"><br>
+
+                        <label for="hasMultipleSessions">Has Multiple Sessions:</label>
+                        <input type="checkbox" id="hasMultipleSessions" name="hasMultipleSessions"><br>
+
+                        <label for="equipmentNeeded">Equipment Needed:</label>
+                        <textarea id="equipmentNeeded" name="equipmentNeeded"></textarea><br>
+                    </div>
+
+                    <div id="seminarFields">
+                        <label for="topic">Topic:</label>
+                        <input type="text" id="topic" name="topic"><br>
+                        <label for="speakers">Speakers:</label>
+                        <textarea id="speakers" name="speakers"></textarea><br>
+                    </div>
+
+                    <button type="submit">Create Event</button>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 NSU Event Nexus. All rights reserved.</p>
+        </div>
+    </footer>
 
     <script>
         document.getElementById('eventType').addEventListener('change', function() {
@@ -207,6 +243,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 seminarFields.style.display = 'none';
             }
         });
+
+        // Trigger change event on page load to display the correct fields
+        document.getElementById('eventType').dispatchEvent(new Event('change'));
     </script>
 </body>
 </html>

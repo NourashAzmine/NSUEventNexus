@@ -112,70 +112,125 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Event</title>
+    <link rel="stylesheet" href="CSS/eventEditCSS.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <h1>Edit Event</h1>
-    <form method="post" enctype="multipart/form-data">
-        <label for="eventName">Event Name:</label>
-        <input type="text" id="eventName" name="eventName" value="<?php echo htmlspecialchars($event['eventName']); ?>" required><br>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <a href="organizerDashboard.php" class="navbar-brand">
+                    <i class="fas fa-calendar-alt"></i> NSU Event Nexus
+                </a>
+            </div>
+            <ul class="navbar-menu">
+            <li><a href="organizerDashboard.php"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="upcoming_events.php"><i class="fas fa-calendar-check"></i> Upcoming Events</a></li>
+                <li><a href="create_event.php"><i class="fas fa-plus-circle"></i> Create Event</a></li>
+                <li><a href="manage_events.php"><i class="fas fa-edit"></i> Manage Events</a></li>
+                <li><a href="notifications.php"><i class="fas fa-bell"></i> Notifications</a></li>
+                <!-- <li><a href="feedback.php"><i class="fas fa-comments"></i> Feedback</a></li> -->
+                <li><a href="volunteer_management.php"><i class="fas fa-users"></i> Volunteer Management</a></li>
+                <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+    </nav>
 
-        <label for="eventDetails">Event Details:</label>
-        <textarea id="eventDetails" name="eventDetails" required><?php echo htmlspecialchars($event['eventDetails']); ?></textarea><br>
+    <div class="mcontainer">
+        <header>
+            <h2>Edit Event</h2>
+        </header>
 
-        <label for="date">Date:</label>
-        <input type="date" id="date" name="date" value="<?php echo htmlspecialchars($event['date']); ?>" required><br>
+        <main>
+            <form method="post" enctype="multipart/form-data">
+                <div class="form-section">
+                    <label for="eventName">Event Name:</label>
+                    <input type="text" id="eventName" name="eventName" value="<?php echo htmlspecialchars($event['eventName']); ?>" required>
+                </div>
+                <div class="form-section">
+                    <label for="eventDetails">Event Details:</label>
+                    <textarea id="eventDetails" name="eventDetails" required><?php echo htmlspecialchars($event['eventDetails']); ?></textarea>
+                </div>
+                <div class="form-section">
+                    <label for="date">Date:</label>
+                    <input type="date" id="date" name="date" value="<?php echo htmlspecialchars($event['date']); ?>" required>
+                </div>
+                <div class="form-section">
+                    <label for="time">Time:</label>
+                    <input type="time" id="time" name="time" value="<?php echo htmlspecialchars($event['time']); ?>" required>
+                </div>
+                <div class="form-section">
+                    <label for="duration">Duration (hours):</label>
+                    <input type="number" step="0.1" id="duration" name="duration" value="<?php echo htmlspecialchars($event['duration']); ?>" required>
+                </div>
+                <div class="form-section">
+                    <label for="location">Location:</label>
+                    <input type="text" id="location" name="location" value="<?php echo htmlspecialchars($event['location']); ?>" required>
+                </div>
+                <div class="form-section">
+                    <label for="banner">Event Banner:</label>
+                    <input type="file" id="banner" name="banner">
+                    <p>Current Banner: <?php echo htmlspecialchars($event['bannerURL']); ?></p>
+                </div>
+                <div class="form-section">
+                    <label for="registrationDeadline">Registration Deadline:</label>
+                    <input type="date" id="registrationDeadline" name="registrationDeadline" value="<?php echo htmlspecialchars($event['registrationDeadline']); ?>" required>
+                </div>
+                <div class="form-section">
+                    <label for="fee">Fee:</label>
+                    <input type="number" step="0.01" id="fee" name="fee" value="<?php echo htmlspecialchars($event['fee']); ?>" required>
+                </div>
+                <div class="form-section">
+                    <label for="sponsor">Sponsor:</label>
+                    <input type="text" id="sponsor" name="sponsor" value="<?php echo htmlspecialchars($event['sponsor']); ?>" required>
+                </div>
 
-        <label for="time">Time:</label>
-        <input type="time" id="time" name="time" value="<?php echo htmlspecialchars($event['time']); ?>" required><br>
+                <?php if ($isSeminar): ?>
+                    <h2>Seminar Details</h2>
+                    <div class="form-section">
+                        <label for="topic">Topic:</label>
+                        <input type="text" id="topic" name="topic" value="<?php echo htmlspecialchars($seminar['topic']); ?>" required>
+                    </div>
+                    <div class="form-section">
+                        <label for="speakers">Speakers:</label>
+                        <input type="text" id="speakers" name="speakers" value="<?php echo htmlspecialchars($seminar['speakers']); ?>" required>
+                    </div>
+                <?php else: ?>
+                    <div class="form-section">
+                        <label for="type">Type:</label>
+                        <input type="text" id="type" name="type" value="<?php echo htmlspecialchars($generalEvent['type']); ?>" required>
+                    </div>
+                    <div class="form-section">
+                        <label for="organizer">Organizer:</label>
+                        <input type="text" id="organizer" name="organizer" value="<?php echo htmlspecialchars($generalEvent['organizer']); ?>" required>
+                    </div>
+                    <div class="form-section">
+                        <label for="expectedAttendance">Expected Attendance:</label>
+                        <input type="number" id="expectedAttendance" name="expectedAttendance" value="<?php echo htmlspecialchars($generalEvent['expectedAttendance']); ?>" required>
+                    </div>
+                    <div class="form-section">
+                        <label for="theme">Theme:</label>
+                        <input type="text" id="theme" name="theme" value="<?php echo htmlspecialchars($generalEvent['theme']); ?>" required>
+                    </div>
+                    <div class="form-section">
+                        <label for="hasMultipleSessions">Has Multiple Sessions:</label>
+                        <input type="checkbox" id="hasMultipleSessions" name="hasMultipleSessions" <?php if ($generalEvent['hasMultipleSessions']) echo 'checked'; ?>>
+                    </div>
+                    <div class="form-section">
+                        <label for="equipmentNeeded">Equipment Needed:</label>
+                        <input type="text" id="equipmentNeeded" name="equipmentNeeded" value="<?php echo htmlspecialchars($generalEvent['equipmentNeeded']); ?>" required>
+                    </div>
+                <?php endif; ?>
 
-        <label for="duration">Duration (hours):</label>
-        <input type="number" step="0.1" id="duration" name="duration" value="<?php echo htmlspecialchars($event['duration']); ?>" required><br>
+                <button type="submit" class="btn">Update Event</button>
+            </form>
+        </main>
+    </div>
 
-        <label for="location">Location:</label>
-        <input type="text" id="location" name="location" value="<?php echo htmlspecialchars($event['location']); ?>" required><br>
-
-        <label for="banner">Event Banner:</label>
-        <input type="file" id="banner" name="banner"><br>
-        Current Banner: <?php echo htmlspecialchars($event['bannerURL']); ?><br>
-
-        <label for="registrationDeadline">Registration Deadline:</label>
-        <input type="date" id="registrationDeadline" name="registrationDeadline" value="<?php echo htmlspecialchars($event['registrationDeadline']); ?>" required><br>
-
-        <label for="fee">Fee:</label>
-        <input type="number" step="0.01" id="fee" name="fee" value="<?php echo htmlspecialchars($event['fee']); ?>" required><br>
-
-        <label for="sponsor">Sponsor:</label>
-        <input type="text" id="sponsor" name="sponsor" value="<?php echo htmlspecialchars($event['sponsor']); ?>" required><br>
-
-        <?php if ($isSeminar): ?>
-            <h2>Seminar Details</h2>
-            <label for="topic">Topic:</label>
-            <input type="text" id="topic" name="topic" value="<?php echo htmlspecialchars($seminar['topic']); ?>" required><br>
-
-            <label for="speakers">Speakers:</label>
-            <input type="text" id="speakers" name="speakers" value="<?php echo htmlspecialchars($seminar['speakers']); ?>" required><br>
-        <?php else: ?>
-            <h2>General Event Details</h2>
-            <label for="type">Type:</label>
-            <input type="text" id="type" name="type" value="<?php echo htmlspecialchars($generalEvent['type']); ?>" required><br>
-
-            <label for="organizer">Organizer:</label>
-            <input type="text" id="organizer" name="organizer" value="<?php echo htmlspecialchars($generalEvent['organizer']); ?>" required><br>
-
-            <label for="expectedAttendance">Expected Attendance:</label>
-            <input type="number" id="expectedAttendance" name="expectedAttendance" value="<?php echo htmlspecialchars($generalEvent['expectedAttendance']); ?>" required><br>
-
-            <label for="theme">Theme:</label>
-            <input type="text" id="theme" name="theme" value="<?php echo htmlspecialchars($generalEvent['theme']); ?>" required><br>
-
-            <label for="hasMultipleSessions">Has Multiple Sessions:</label>
-            <input type="checkbox" id="hasMultipleSessions" name="hasMultipleSessions" <?php if ($generalEvent['hasMultipleSessions']) echo 'checked'; ?>><br>
-
-            <label for="equipmentNeeded">Equipment Needed:</label>
-            <input type="text" id="equipmentNeeded" name="equipmentNeeded" value="<?php echo htmlspecialchars($generalEvent['equipmentNeeded']); ?>" required><br>
-        <?php endif; ?>
-
-        <button type="submit">Update Event</button>
-    </form>
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 NSU Event Nexus. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 </html>

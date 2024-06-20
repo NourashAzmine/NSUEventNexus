@@ -97,28 +97,95 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Organizer Registration</title>
+    <link rel="stylesheet" href="CSS/register_organizerCSS.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+        function togglePasswordVisibility(inputId, toggleIconId) {
+            var input = document.getElementById(inputId);
+            var toggleIcon = document.getElementById(toggleIconId);
+            if (input.type === "password") {
+                input.type = "text";
+                toggleIcon.classList.remove("fa-eye");
+                toggleIcon.classList.add("fa-eye-slash");
+            } else {
+                input.type = "password";
+                toggleIcon.classList.remove("fa-eye-slash");
+                toggleIcon.classList.add("fa-eye");
+            }
+        }
+    </script>
 </head>
 <body>
-    <h2>Register as Organizer</h2>
-    <form method="post" enctype="multipart/form-data">
-        <input type="text" name="username" placeholder="Username" required><br>
-        <input type="email" name="email" placeholder="Email" required><br>
-        <input type="password" name="password" placeholder="Password" required><br>
-        <input type="password" name="confirm_password" placeholder="Confirm Password" required><br>
-        <input type="text" name="organizationType" placeholder="Organization Type (e.g., Club, Teacher)" required><br>
-        <input type="text" name="organizationName" placeholder="Organization Name" required><br>
-        <input type="text" name="position" placeholder="Position" required><br>
-        <input type="text" name="contactNumber" placeholder="Contact Number" required><br>
-        <input type="text" name="address" placeholder="Address" required><br>
-        <input type="file" name="photo" id="photo"><br>
-        <button type="submit">Register</button>
-    </form>
+    <?php if (isset($message)): ?>
+        <div id="message" class="message"><?php echo $message; ?></div>
+    <?php endif; ?>
+
+    <div class="registration-container">
+        <h2>Register as Organizer</h2>
+        <form method="post" enctype="multipart/form-data">
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" name="username" placeholder="Username" required>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" name="email" placeholder="Email" required>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" name="password" id="password" placeholder="Password" required>
+                <i class="fas fa-eye toggle-password" id="togglePassword" onclick="togglePasswordVisibility('password', 'togglePassword')"></i>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password" required>
+                <i class="fas fa-eye toggle-password" id="toggleConfirmPassword" onclick="togglePasswordVisibility('confirm_password', 'toggleConfirmPassword')"></i>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-id-badge"></i>
+                <input type="text" name="organizationType" placeholder="Organization Type (e.g., Club, Teacher)" required>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-building"></i>
+                <input type="text" name="organizationName" placeholder="Organization Name" required>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-briefcase"></i>
+                <input type="text" name="position" placeholder="Position" required>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-phone"></i>
+                <input type="text" name="contactNumber" placeholder="Contact Number" required>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-map-marker-alt"></i>
+                <input type="text" name="address" placeholder="Address" required>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-file-image"></i>
+                <input type="file" name="photo" id="photo" class="custom-file-input">
+            </div>
+            <button type="submit" class="btn">Register</button>
+            <a href="index.php" class="back-to-home">Back to Home</a>
+        </form>
+    </div>
+
+    <script>
+        setTimeout(function() {
+            var message = document.getElementById('message');
+            if (message) {
+                message.style.opacity = '0';
+                setTimeout(function() {
+                    message.style.display = 'none';
+                }, 1000);
+            }
+        }, 3000); // Hide after 3 seconds
+    </script>
 </body>
 </html>
