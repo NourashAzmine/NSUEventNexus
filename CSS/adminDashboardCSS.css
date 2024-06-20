@@ -1,0 +1,152 @@
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+.navbar {
+    background-color: #2b0642;
+    padding: 10px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 10px 25px;
+}
+
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-header .navbar-brand {
+    color: #fff;
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-header .navbar-brand i {
+    margin-right: 8px;
+}
+
+.navbar-middle a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.navbar-menu li {
+    margin-left: 20px;
+}
+
+.navbar-menu li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.navbar-menu li a:hover {
+    color: #e91e63;
+}
+
+.dashboard-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: -10px auto;
+}
+
+.admin-title {
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: -20px;
+    color: #2b0642;
+}
+
+.overview-title {
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+
+.overview-section {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 55px;
+    border-radius: 8px;
+    height: 304px;
+    margin-bottom: 20px;
+}
+
+.overview-box {
+    background-color: #f4f4f4;
+    padding: 0px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 30%;
+    text-align: center;
+    margin: -10px;
+}
+
+.overview-box h2 {
+    font-size: 30px;
+    margin: -85px;
+
+}
+
+.overview-box p {
+    font-size: 110px;
+    font-weight: bold;
+    color: #e91e63;
+    margin: 70px;
+}
+
+.footer {
+    background-color: #2b0642;
+    padding: 20px 0;
+    text-align: center;
+    color: #fff;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer p {
+    margin: 0;
+}
+
+
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #4b0082;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #c935c0;
+}

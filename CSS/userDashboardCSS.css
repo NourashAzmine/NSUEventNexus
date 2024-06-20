@@ -1,0 +1,146 @@
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    height: 100%;
+}
+
+.navbar {
+    background-color: #2b0642;
+    padding: 10px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 25px;
+}
+
+.navbar-brand {
+    color: #fff;
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-brand i {
+    margin-right: 8px;
+}
+
+.navbar-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.navbar-menu li {
+    margin-left: 20px;
+}
+
+.navbar-menu li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.navbar-menu li a:hover {
+    color: #e91e63;
+}
+
+.dashboard-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    margin: 30px auto;
+    text-align: center;
+    height: calc(100vh - 226px); /* Adjusted height to cover full page */
+}
+
+.profile-photo {
+    margin-bottom: 20px;
+    padding: 20px 0;
+}
+
+.profile-photo img {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #e91e63;
+    
+}
+
+h2 {
+    margin: 0 0 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 40px;
+}
+
+p {
+    font-size: 20px;
+    margin: 10px 0;
+}
+
+.btn-container {
+    margin-top: 20px;
+}
+
+.btn {
+    background-color: #ff4081;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 13px 23px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    margin: 18px 5px -8px 5px;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.btn:hover {
+    background-color: #e91e63;
+}
+
+.footer {
+    background-color: #2b0642;
+    padding: 20px 0;
+    text-align: center;
+    color: #fff;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer p {
+    margin: 0;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #4b0082;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #c935c0;
+}

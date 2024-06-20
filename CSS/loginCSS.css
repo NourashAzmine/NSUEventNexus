@@ -1,0 +1,95 @@
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.login-container {
+    background-color: #2b0642;
+    color: #fff;
+    padding: 45px;
+    border-radius: 8px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    width: 300px;
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 20px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.input-group i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px 40px; /* Adjusted for space */
+    border: none;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.input-group input:focus {
+    outline: none;
+    border: 2px solid #ff4081;
+}
+
+.input-group .eye-icon {
+    position: absolute;
+    right: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #999;
+    padding: 0; /* To make the clickable area only around the icon */
+    background-color: transparent;
+    border: none;
+}
+
+.btn {
+    background-color: #ff4081;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #e91e63;
+}
+
+.forgot-password, .back-to-home {
+    color: #ff4081;
+    text-decoration: none;
+    display: block;
+    margin-top: 10px;
+    transition: color 0.3s ease;
+}
+
+.forgot-password:hover, .back-to-home:hover {
+    color: #e91e63;
+}
+
+.error {
+    color: #f44336;
+    margin-bottom: 20px;
+}
